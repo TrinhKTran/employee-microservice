@@ -67,7 +67,6 @@ public class EmployeeServiceImplTest {
         assertEquals(createdEmployee.getEmployeeId(), readEmployee.getEmployeeId());
         assertEmployeeEquivalence(createdEmployee, readEmployee);
 
-
         // Update checks
         readEmployee.setPosition("Development Manager");
 
@@ -91,17 +90,22 @@ public class EmployeeServiceImplTest {
         assertEquals(expected.getPosition(), actual.getPosition());
     }
     @Test
-    public void testCreateReadCompensate() {
+    public void testCreateReadCompensation() {
         Compensation testCompensation = new Compensation();
         testCompensation.setEmployeeId("c0c2293d-16bd-4603-8e08-638a9d18b22c");
         testCompensation.setSalary(100000);
-        //testCompensation.setEffectiveDate("2023-10-10");
 
         // Create checks
         Compensation createdCompensation = restTemplate.postForEntity(compensateUrl, testCompensation, Compensation.class).getBody();
 
         assertNotNull(createdCompensation.getEmployeeId());
         assertCompensationEquivalence(testCompensation, createdCompensation);
+
+
+        // Read checks
+        Compensation readCompensation = restTemplate.getForEntity(compensateIdUrl, Compensation.class, createdCompensation.getEmployeeId()).getBody();
+        assertEquals(createdCompensation.getEmployeeId(), readCompensation.getEmployeeId());
+        assertCompensationEquivalence(createdCompensation, readCompensation);
 
     }
     private static void assertCompensationEquivalence(Compensation expected, Compensation actual) {
