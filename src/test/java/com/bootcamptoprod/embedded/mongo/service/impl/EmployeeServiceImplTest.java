@@ -1,6 +1,7 @@
 package com.bootcamptoprod.embedded.mongo.service.impl;
 
 
+import com.bootcamptoprod.embedded.mongo.entity.Compensation;
 import com.bootcamptoprod.embedded.mongo.entity.Employee;
 import com.bootcamptoprod.embedded.mongo.service.EmployeeService;
 import org.junit.Before;
@@ -25,6 +26,8 @@ public class EmployeeServiceImplTest {
 
     private String employeeUrl;
     private String employeeIdUrl;
+    private String compensateUrl;
+    private String compensateIdUrl;
 
     @Autowired
     private EmployeeService employeeService;
@@ -39,6 +42,9 @@ public class EmployeeServiceImplTest {
     public void setup() {
         employeeUrl = "http://localhost:" + port + "/employee";
         employeeIdUrl = "http://localhost:" + port + "/employee/{id}";
+        compensateUrl = "http://localhost:" + port + "/compensation";
+        compensateIdUrl = "http://localhost:" + port + "/compensation-by-emp-id/{id}";
+
     }
 
     @Test
@@ -83,5 +89,23 @@ public class EmployeeServiceImplTest {
         assertEquals(expected.getLastName(), actual.getLastName());
         assertEquals(expected.getDepartment(), actual.getDepartment());
         assertEquals(expected.getPosition(), actual.getPosition());
+    }
+    @Test
+    public void testCreateReadCompensate() {
+        Compensation testCompensation = new Compensation();
+        testCompensation.setEmployeeId("c0c2293d-16bd-4603-8e08-638a9d18b22c");
+        testCompensation.setSalary(100000);
+        //testCompensation.setEffectiveDate("2023-10-10");
+
+        // Create checks
+        Compensation createdCompensation = restTemplate.postForEntity(compensateUrl, testCompensation, Compensation.class).getBody();
+
+        assertNotNull(createdCompensation.getEmployeeId());
+        assertCompensationEquivalence(testCompensation, createdCompensation);
+
+    }
+    private static void assertCompensationEquivalence(Compensation expected, Compensation actual) {
+        assertEquals(expected.getEmployeeId(), actual.getEmployeeId());
+        assertEquals(expected.getSalary(), actual.getSalary());
     }
 }
