@@ -11,7 +11,8 @@ The application may be executed by running `spring bootRun`.  Application will s
 ### Access swagger:
 http://localhost:8088/swagger-ui/index.html#/
 
-
+### How to access embedded MongoDB from mongosh
+mongosh “mongodb://localhost:27018/test”
 
 ### How to Use
 The following endpoints are available to use:
